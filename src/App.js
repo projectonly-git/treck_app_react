@@ -13,6 +13,7 @@ import Adminhome from './Pages/Adminhome'
 import Userview from './Pages/Userupcomingevents'
 import Booking from './Pages/Booking'
 import Checkout from './Pages/Checkout'
+import Profile from './Pages/Profile'
 
 
 
@@ -27,10 +28,13 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Adminhome />} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/booking" element={<Booking />} />
+          <Route path="/booking/:treckid" element={<Booking />} />
+          <Route path="/profile" element={<Profile />} />
+
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

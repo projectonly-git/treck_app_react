@@ -9,18 +9,20 @@ function Homewithoutlogin(props) {
     <div>
       <Navbar />
       <Homewithoutloginout>
+
+        <div className="hero d-flex align-items-center justify-content-center">
+          <h1 className="text-white">get lost in the beauty of nature</h1>
+        </div>
         <div className="container">
-          <div className="row">
+          <div className="row py-5">
             <div className="col-lg-6 d-flex justify-content-center align-items-center">
               <div className="d-flex flex-column">
                 <div className="d-flex flex-column">
-                  <h1>PLAY</h1>
-                  <h1>FOOTBALL</h1>
+                  <h1>TrekIt</h1>
                 </div>
                 <div className="d-flex flex-column">
                   <h6>
-                    kickstart your career in football with our optimised training
-                    batch or a personal coach.
+                    get lost in a adventures treck .
                   </h6>
                 </div>
                 <div className="d-flex flex-column">
@@ -35,7 +37,7 @@ function Homewithoutlogin(props) {
               </div>
             </div>
             <div className="col-lg-6">
-              <img src="footbal1.gif" />
+              <img src="https://images.unsplash.com/photo-1587547131116-a0655a526190?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1216&q=80" />
             </div>
           </div>
         </div>
@@ -49,7 +51,10 @@ function Homewithoutlogin(props) {
   );
 }
 const Homewithoutloginout = styled.div`
-  background-color:lightgray;
+.hero{
+  height:750px;
+  background-image: url("https://images.unsplash.com/photo-1530461215976-31923a646c83?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1794&q=80")
+}
   img {
     width: 100%;
   }

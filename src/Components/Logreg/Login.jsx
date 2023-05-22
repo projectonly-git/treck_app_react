@@ -29,57 +29,33 @@ const Login = () => {
 
   const trytologin = () => {
     let user = {
-      email: formdata.email,
+      username: formdata.email,
       password: formdata.password,
     };
 
-    axios.post(process.env.REACT_APP_BACKEND_URL + "/user/login", user).then(
-      (response) => {
-        //console.log(response.data);
+    axios
+      .post(process.env.REACT_APP_BACKEND_URL + "/users/login", user)
+      .then((response) => {
+        console.log(response.data);
 
         if (response.data === "") {
           toast.error("please check your credentials", {
             position: "top-right",
             autoClose: 2000,
           });
-        }
-
-        if (response.data.roles === "ADMIN") {
+        } else {
+          toast.success("login success !!", {
+            position: "top-right",
+            autoClose: 2000,
+          });
           localStorage.setItem("userrole", response.data.roles);
           localStorage.setItem("isloggedin", "yes");
-        } else {
-          if (response.data.user.roles === "PLAYER") {
-            localStorage.setItem("pid", response.data.pid);
-            localStorage.setItem("isloggedin", "yes");
-            localStorage.setItem("email", response.data.user.email);
-            localStorage.setItem("userrole", response.data.user.roles);
-          } else if (response.data.user.roles === "COACH") {
-            localStorage.setItem("pid", response.data.coach_id);
-            localStorage.removeItem("isregisteredforclub");
-            localStorage.removeItem("clubid");
-            localStorage.setItem("isloggedin", "yes");
-            localStorage.setItem("email", response.data.user.email);
+          localStorage.setItem("emailid", response.data.username);
+          localStorage.setItem("id", response.data.id);
 
-            localStorage.setItem("userrole", response.data.user.roles);
-          }
-
-          if (response.data.user.roles === "PLAYER") {
-            if (response.data.club !== null) {
-              localStorage.setItem("isregisteredforclub", "yes");
-              localStorage.setItem("clubid", response.data.club.club_id);
-            }
-          }
+          navigate("/", { state: { massage: "loggedin" } });
         }
-        navigate("/", { state: { massage: "loggedin" } });
-        
-      },
-      (error) => {
-        toast.error("Email Not preasent! register", {
-          position: "top-right",
-          autoClose: 2000,
-        });
-      }
-    );
+      });
   };
 
   return (

@@ -90,7 +90,115 @@ const Singleplayerview = ({ player }) => {
   );
 };
 
+//__________________ Add a new activity _____________________________
+
+const Addactivity = () => {
+  const [activity, setActivity] = useState({
+    name: "",
+    location: "",
+    description: "",
+    price: "",
+  });
+
+  const updatedetails = (event) => {
+    const { name, value } = event.target;
+    setActivity((prevObject) => ({
+      ...prevObject,
+      [name]: value,
+    }));
+    //console.log(training);
+  };
+  const addtreck = () => {
+    let activity1 = {
+      activitname: activity.name,
+      location: activity.location,
+      description: activity.description,
+      price: activity.price,
+    };
+    axios
+      .post(process.env.REACT_APP_BACKEND_URL + "/activity/add", activity1)
+      .then(
+        (response) => {
+          console.log(response.data);
+          if (response.data == 200) {
+            toast.success("treck saved sucessfully", {
+              position: "top-right",
+              autoClose: 2000,
+            });
+          }
+        },
+        (error) => {}
+      );
+  };
+
+  return (
+    <div className="container">
+      <Addplayerview className="mt-5">
+        <h1>Add a new activity</h1>
+        <div class="row">
+          <div className="col-lg-3 col-12">
+            <input
+              type="text"
+              placeholder="enter treck name"
+              className="px-2 input_box w-100"
+              name="name"
+              onChange={updatedetails}
+            />
+          </div>
+
+          <div className="col-lg-3 col-12">
+            <input
+              type="text"
+              placeholder="enter track location"
+              className="px-3 input_box w-100"
+              name="location"
+              onChange={updatedetails}
+            />
+          </div>
+          <div className="col-lg-3 col-12">
+            <input
+              type="number"
+              placeholder="enter price per person"
+              className="px-3 input_box w-100"
+              name="price"
+              onChange={updatedetails}
+            />
+          </div>
+
+          <div className="col-lg-12 mt-3">
+            <textarea
+              className="leave_comment p-2"
+              name="description"
+              id="myTextarea"
+              rows="4"
+              cols="50"
+              placeholder="enter description for this trecking"
+              onChange={updatedetails}
+            ></textarea>
+          </div>
+
+          <div className="col-lg-4 col-12">
+            <input
+              type="submit"
+              value="add new trecking"
+              name="password col-lg-4 col-12"
+              className="px-3 btn btn-primary"
+              onClick={() => addtreck()}
+            />
+          </div>
+        </div>
+      </Addplayerview>
+      <div className="row"></div>
+    </div>
+  );
+};
 //__________________ Add a new trecking_____________________________
+const get_all_treckings = async () => {
+  const response = await axios.get(
+    `${process.env.REACT_APP_BACKEND_URL}/trek/get/all`
+  );
+  return response.data;
+};
 const Addtrecking = () => {
   const [treck, setTreck] = useState({
     name: "",
@@ -98,6 +206,15 @@ const Addtrecking = () => {
     location: "",
     description: "",
     price: "",
+  });
+
+  const {
+    data: treckings,
+    isLoading: alltreckingsloading,
+    refetch: refetchalltreckings,
+  } = useQuery("get_all_training", () => get_all_treckings(), {
+    refetchOnMount: false,
+    refetchInterval: 5000,
   });
 
   const updatedetails = (event) => {
@@ -108,9 +225,26 @@ const Addtrecking = () => {
     }));
     //console.log(training);
   };
-
   const addtreck = () => {
-    console.log(treck);
+    let treck1 = {
+      treckname: treck.name,
+      duration: treck.duration,
+      location: treck.location,
+      description: treck.description,
+      price: treck.price,
+    };
+    axios.post(process.env.REACT_APP_BACKEND_URL + "/trek/add", treck1).then(
+      (response) => {
+        console.log(response.data);
+        if (response.data == 200) {
+          toast.success("treck saved sucessfully", {
+            position: "top-right",
+            autoClose: 2000,
+          });
+        }
+      },
+      (error) => {}
+    );
   };
 
   return (
@@ -179,45 +313,164 @@ const Addtrecking = () => {
             />
           </div>
         </div>
+
+        <div className="row">
+          {treckings?.map((t) => {
+            return (
+              <>
+                <Singletreckingview className="col-lg-4 p-2">
+                  <div className="bg-training p-3 singletreckingview_inside">
+                    <img
+                      src="https://images.unsplash.com/photo-1594568284297-7c64464062b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8MTYlM0E5fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+                      className="w-100"
+                    />
+
+                    <h3>{t.treckname}</h3>
+                    <h5>
+                      <span className="small_header px-2 mx-2">Duration: </span>
+                      {t.duration}
+                    </h5>
+                    <h5>
+                      <span className="small_header px-2 mx-2">location: </span>
+                      {t.location}
+                    </h5>
+                    <p>{t.description}</p>
+                    <h2>{t.price} per person</h2>
+                  </div>
+                </Singletreckingview>
+              </>
+            );
+          })}
+        </div>
+      </Addplayerview>
+    </div>
+  );
+};
+
+//__________________ Add a new Hotel _____________________________
+
+const Postnewhotels = () => {
+  const [hotel, setHotel] = useState({
+    name: "",
+    image: "",
+    location: "",
+    price: "",
+  });
+
+  const updatedetails = (event) => {
+    const { name, value } = event.target;
+    setHotel((prevObject) => ({
+      ...prevObject,
+      [name]: value,
+    }));
+    console.log(hotel);
+  };
+  const addHotel = () => {
+    axios.post(process.env.REACT_APP_BACKEND_URL + "/hotel/add", hotel).then(
+      (response) => {
+        console.log(response.data);
+        if (response.data == 200) {
+          toast.success("Hotel saved sucessfully", {
+            position: "top-right",
+            autoClose: 2000,
+          });
+        }
+      },
+      (error) => {}
+    );
+  };
+
+  return (
+    <div className="container">
+      <Addplayerview className="mt-5">
+        <h1>Add a new trecking path</h1>
+        <div class="row">
+          <div className="col-lg-3 col-12">
+            <input
+              type="text"
+              placeholder="enter hotel name"
+              className="px-2 input_box w-100"
+              name="name"
+              onChange={updatedetails}
+            />
+          </div>
+
+          <div className="col-lg-3 col-12">
+            <input
+              type="text"
+              placeholder="enter a image link"
+              className="px-3 input_box w-100"
+              name="image"
+              onChange={updatedetails}
+            />
+          </div>
+
+          <div className="col-lg-3 col-12">
+            <input
+              type="text"
+              placeholder="enter hotel location"
+              className="px-3 input_box w-100"
+              name="location"
+              onChange={updatedetails}
+            />
+          </div>
+          <div className="col-lg-3 col-12">
+            <input
+              type="number"
+              placeholder="enter hotel price per night"
+              className="px-3 input_box w-100"
+              name="price"
+              onChange={updatedetails}
+            />
+          </div>
+
+          <div className="col-lg-4 col-12 my-2">
+            <input
+              type="submit"
+              value="add new hotel"
+              name="password col-lg-4 col-12"
+              className="px-3 btn btn-primary"
+              onClick={() => addHotel()}
+            />
+          </div>
+        </div>
       </Addplayerview>
     </div>
   );
 };
 
 //______________ See all registered users________________________________
-const getallcoachesfunc = async () => {
+const getallusersfunc = async () => {
   const response = await axios.get(
-    `${process.env.REACT_APP_BACKEND_URL}/coach/all`
+    `${process.env.REACT_APP_BACKEND_URL}/users/get/all`
   );
   return response.data;
 };
 const Seeallusers = () => {
-  let players = ["coach1", "coach2", "coach3"];
-
-  // const {
-  //   data: allcoaches,
-  //   isLoading: allcoachesloading,
-  //   refetch: refetchallcoaches,
-  // } = useQuery("get_all_coaches", () => getallcoachesfunc(), {
-  //   refetchOnMount: false,
-  //   refetchInterval: 5000,
-  // });
+  const {
+    data: users,
+    isLoading: allUsersLoading,
+    refetch: refetchAllUsers,
+  } = useQuery("get_all_coaches", () => getallusersfunc(), {
+    refetchOnMount: false,
+    refetchInterval: 5000,
+  });
 
   ////console.log(allcoaches)
 
-  // if (allcoachesloading) {
-  //   return "loading";
-  // }
+  if (allUsersLoading) {
+    return "loading";
+  }
   return (
     <div className="container">
       <div className="row container">
-        {players.map((player, index) => (
+        {users?.map((u, index) => (
           <div className="col-lg-4  col-sm-6 col-12 my-2" key={index}>
             <Singleplayer className="p-2">
               <h1>emailid:</h1>
-              <p>maityapurba020@gmail.com</p>
+              <p>{u.username}</p>
               <h5>username</h5>
-              <p>apurba maity</p>
+              <p>{u.name}</p>
             </Singleplayer>
           </div>
         ))}
@@ -226,254 +479,24 @@ const Seeallusers = () => {
   );
 };
 
-//___________________________________________________
-
-const getallclubfunc = async () => {
-  const response = await axios.get(
-    `${process.env.REACT_APP_BACKEND_URL}/club/all`
-  );
-  return response.data;
-};
-const Addtrainingsession = ({ user }) => {
-  const [selectedDivIndex, setSelectedDivIndex] = useState(-1);
-  const [timeslot, setTimeslot] = useState([
-    "08:00-10:00",
-    "10:00-12:00",
-    "12:00-14:00",
-    "14:00-16:00",
-    "16:00-18:00",
-    "18:00-20:00",
-    "20:00-22:00",
-  ]);
-  const [booking, setBooking] = useState({
-    bookingdate: "none",
-    bookingtime: "none",
-  });
-  const [training, setTraining] = useState({
-    name: "",
-    startDate: "",
-    endDate: "",
-  });
-  const [coach, setCoach] = useState("");
-  const [club, setClub] = useState("");
-  const handleOptionChange = (event) => {
-    setCoach(event.target.value);
-    //console.log(coach);
-  };
-
-  const handleOptionChangeclub = (event) => {
-    setClub(event.target.value);
-    //console.log(club);
-  };
-
-  const {
-    data: allcoaches,
-    isLoading: allcoachesloading,
-    refetch: refetchallcoaches,
-  } = useQuery("get_all_coaches", () => getallcoachesfunc(), {
-    refetchOnMount: false,
-    refetchInterval: 5000,
-  });
-
-  const {
-    data: allclub,
-    isLoading: allclubloading,
-    refetch: refetchallclub,
-  } = useQuery("get_all_club", () => getallclubfunc(), {
-    refetchOnMount: false,
-    refetchInterval: 5000,
-  });
-
-  const changeTraining = (event) => {
-    const { name, value } = event.target;
-    setTraining((prevObject) => ({
-      ...prevObject,
-      [name]: value,
-    }));
-    //console.log(training);
-  };
-
-  const addEvent = () => {
-    training.time = booking.bookingtime;
-    //console.log(coach+"-----"+club)
-    if (
-      training.name == "" ||
-      training.startDate == "" ||
-      training.endDate == "" ||
-      club == "" ||
-      coach == ""
-    ) {
-      toast.error("enter all the fields", {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-      return;
-    }
-    axios
-      .post(
-        process.env.REACT_APP_BACKEND_URL +
-          "/club/addTrainingGroup/" +
-          coach +
-          "/" +
-          club,
-        training
-      )
-      .then(
-        (response) => {
-          //console.log(response.data);
-          toast.success("this event has been added", {
-            position: toast.POSITION.TOP_RIGHT,
-          });
-        },
-        (error) => {
-          //console.log("some error");
-        }
-      );
-  };
-
-  const handlebookingtime = (val, index) => {
-    setBooking({ ...booking, bookingtime: val });
-    setSelectedDivIndex(index);
-  };
-
-  //console.log(allcoaches);
-
-  if (allcoachesloading || allclubloading) return "loading";
-  return (
-    <Admin_view_schedule_traing_season className="container">
-      <Addplayerview className="mt-5">
-        <h1>Add a training batch</h1>
-        <div class="">
-          <input
-            type="text"
-            placeholder="enter traing batch name"
-            className="px-2"
-            name="name"
-            onChange={changeTraining}
-          />
-          <br />
-          <h5>choose a coach</h5>
-          <select value={coach} onChange={handleOptionChange}>
-            <option value="" key="">
-              choose a coach
-            </option>
-            {allcoaches.map((option) => (
-              <option value={option.coach_id} key={option.coach_id}>
-                {option.user.name}
-              </option>
-            ))}
-          </select>
-          <h5>choose a club</h5>
-          <select value={club} onChange={handleOptionChangeclub}>
-            <option value="" key="">
-              choose a club
-            </option>
-            {allclub.map((club) => (
-              <option value={club.club_id} key={club.coach_id}>
-                {club.club_name}
-              </option>
-            ))}
-          </select>
-
-          <br />
-          <div className="d-flex flex-row my-3">
-            <div>
-              <h5>select a start date</h5>
-              <input
-                type="date"
-                placeholder="choose the start date"
-                className="px-3"
-                name="startDate"
-                onChange={changeTraining}
-              />
-            </div>
-
-            <div className="mx-5">
-              <h5>select a end date</h5>
-              <input
-                type="date"
-                placeholder="choose the start date"
-                className="px-3 mx-3"
-                name="endDate"
-                onChange={changeTraining}
-              />
-            </div>
-          </div>
-          <br />
-
-          <h5>choose a time duration for the training batch</h5>
-          <div className="row my-3">
-            {timeslot.map((single_time_slot, index) => (
-              <div className="col-lg-3">
-                <div
-                  className="singletimeslot h6 cursor_pointer px-3"
-                  onClick={() => handlebookingtime(single_time_slot, index)}
-                  style={{
-                    backgroundColor:
-                      selectedDivIndex === index ? "red" : "#38bacf",
-                  }}
-                >
-                  {single_time_slot}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <input
-            type="submit"
-            value="create new training batch"
-            name="password"
-            className="px-3 btn btn-primary"
-            onClick={() => addEvent()}
-          />
-        </div>
-      </Addplayerview>
-    </Admin_view_schedule_traing_season>
-  );
-};
-//______________________________________________________-
-
-//_______________________________________________________________
+//_____________________ see all requests __________________________________________
 const getallpendingrequestfunc = async () => {
   const response = await axios.get(
-    `${process.env.REACT_APP_BACKEND_URL}/admin/getAllPersonalCoachRequest`
+    `${process.env.REACT_APP_BACKEND_URL}/orders/get/all`
   );
   return response.data;
 };
-
-const Rendersinglecoachbooking = ({ spr, approve }) => {
-  if (spr.status === "WAITING") {
-    return (
-      <>
-        <tr className="not_heading_row my-1 h6">
-          <td>{spr.player.user.name}</td>
-          <td>{spr.player.user.email}</td>
-          <td>{spr.coach.user.name}</td>
-
-          <td className="p-2">
-            <input
-              type="submit"
-              className="btn btn-success mx-3"
-              value="approve"
-              onClick={() => approve(spr.personal_training_id)}
-            />
-          </td>
-        </tr>
-      </>
-    );
-  }
-};
-
 const Approvetreckrequests = () => {
-  let [allpendingrequest, setAllpendingrequest] = useState([1, 2, 3, 4]);
-  // const {
-  //   data: allpendingrequest,
-  //   isLoading: allpendingrequestloading,
-  //   refetch: refetchallpendingrequest,
-  // } = useQuery("get_all_allpendingrequest", () => getallpendingrequestfunc(), {
-  //   refetchOnMount: false,
-  //   refetchInterval: 5000,
-  // });
-  //console.log(allpendingrequest);
+  // let [allpendingrequest, setAllpendingrequest] = useState([1, 2, 3, 4]);
+  const {
+    data: allpendingrequest,
+    isLoading: allpendingrequestloading,
+    refetch: refetchallpendingrequest,
+  } = useQuery("get_all_allpendingrequest", () => getallpendingrequestfunc(), {
+    refetchOnMount: false,
+    refetchInterval: 5000,
+  });
+  console.log(allpendingrequest);
 
   const approve = (coachbookid) => {
     // axios
@@ -494,49 +517,91 @@ const Approvetreckrequests = () => {
     //   );
   };
 
-  // if (allpendingrequestloading) return "loading";
+  if (allpendingrequestloading) return "loading";
   return (
     <Approvecoach className="container">
       <div className="row">
-        {allpendingrequest.map((index, spr) => {
+        {allpendingrequest.map((booking, index) => {
           return (
             <>
-              <div className="col-lg-4">
-                <div className="singletreckingview_inside bg-training my-2">
-                  <Singletreckingview>
-                    <div className=" p-3">
-                      <h3>Kedarnath treck</h3>
-                      <h5>
-                        <span className="small_header px-2">Duration: </span>4
-                        days
-                      </h5>
-                      <h5>
-                        <span className="small_header px-2">location: </span>
-                        kashmir
-                      </h5>
-                      <div className="h1_book_now px-3">
-                        <h1>$2200</h1>
+              <div className=" col-lg-4 my-2 ">
+                <Singletreckingview className="singletreckingview_inside">
+                  {booking.trek != null && (
+                    <div className="">
+                      <div className="bg-training p-3 ">
+                        <h3>{booking.trek.treckname}</h3>
+                        <h5 className="d-flex flex-row">
+                          <span className="small_header px-2">Duration: </span>{" "}
+                          <span className="px-3">{booking.trek.duration} </span>
+                        </h5>
+                        <h5>
+                          <span className="small_header px-2">location: </span>{" "}
+                          <span className="px-3">{booking.trek.location}</span>
+                        </h5>
+                        <h5>
+                          <span className="small_header px-2">
+                            no of people:{" "}
+                          </span>{" "}
+                          <span className="px-3">
+                            {booking.personcount} people{" "}
+                          </span>
+                        </h5>
+                        <div className="h1_book_now px-3">
+                          <h1>${booking.trek.price}</h1>
+                        </div>
                       </div>
                     </div>
-                  </Singletreckingview>
-                  <Singletreckingview className="my-3">
-                    <div className="bg-training p-3">
-                      <h3>Kedarnath treck</h3>
-                      <h5>
-                        <span className="small_header px-2">Duration: </span>4
-                        days
-                      </h5>
-                      <h5>
-                        <span className="small_header px-2">location: </span>
-                        kashmir
-                      </h5>
-                      <h2>$220 per person</h2>
-                      <div className="h1_book_now px-3">
-                        <h1>$2300</h1>
+                  )}
+                  {booking.hotel != null && (
+                    <div className="my-3">
+                      <div className="bg-training p-3 ">
+                        <h3>{booking.hotel.name}</h3>
+                        <h5>
+                          <span className="small_header px-2">location: </span>{" "}
+                          {booking.hotel.location}
+                        </h5>
+                        {/* <h2>$220 per person</h2> */}
+                        <div className="h1_book_now px-3">
+                          <h1>${booking.price}</h1>
+                        </div>
                       </div>
                     </div>
-                  </Singletreckingview>
-                </div>
+                  )}
+
+                  {booking.activity != null && (
+                    <div className="my-3">
+                      <div className="bg-training p-2">
+                        <h3>{booking.activity.activitname}</h3>
+                        <p>{booking.activity.description}</p>
+                        <h5>
+                          <span className="small_header px-2">location: </span>
+                          <span className="px-2">
+                            {booking.activity.location}{" "}
+                          </span>
+                        </h5>
+                        <div className="h1_book_now px-3">
+                          <h1>${booking.price}</h1>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="px-2">
+                    <h5>
+                      <span className="small_header px-2">userid: </span>
+                      <span className="px-2">{booking.user.username} </span>
+                    </h5>
+                    <h5>
+                      <span className="small_header px-2">username: </span>
+                      <span className="px-2">{booking.user.name} </span>
+                    </h5>
+                    {booking.status == "pending" && (
+                      <div className="h1_book_now_invert px-3 cursor_pointer">
+                        <h1>approve</h1>
+                      </div>
+                    )}
+                  </div>
+                </Singletreckingview>
               </div>
             </>
           );
@@ -553,13 +618,16 @@ const Returncomponentbasedonchoose = ({ choose, user }) => {
     return <Addtrecking />;
   }
   if (choose === 1) {
-    return <Approvetreckrequests />;
-  }
-  if (choose === 2) {
     return <Seeallusers />;
   }
-  if (choose === 3) {
+  if (choose === 2) {
     return <Approvetreckrequests />;
+  }
+  if (choose === 3) {
+    return <Postnewhotels />;
+  }
+  if (choose === 4) {
+    return <Addactivity />;
   }
 };
 
@@ -569,9 +637,10 @@ function Adminhome({ user }) {
   console.warn = function () {};
   let actions = [
     "Add New Trecking",
-    "Approve User Requests",
     "See All Users",
+    "Approve treck requests",
     "Post New Hotels",
+    "Add activity",
   ];
   return (
     <>
@@ -675,18 +744,22 @@ const Singletreckingview = styled.div`
     background-color: #293241;
     color: #ee6c4d;
   }
+  .h1_book_now_invert {
+    background-color: #ee6c4d;
+    color: #293241;
+  }
   .input_no_of_people_in {
     background-color: #e0fbfc;
     border: 3px solid #293241;
-    border-radius: 15px;
+    border-radius: 5;
     height: 50px;
     width: 100%;
   }
 `;
 const Approvecoach = styled.div`
   .singletreckingview_inside {
-    border: 5px solid #293241;
-    border-radius: 20px;
+    border: 3px solid #293241;
+    border-radius: 10px;
     background-color: #e0fbfc;
   }
 `;
@@ -715,6 +788,14 @@ const Outersectionsingletrainingview = styled.div`
 `;
 const Extrapaddingforbottom = styled.div`
   height: 600px;
+`;
+
+const Userhome = styled.div`
+  .heading {
+    background-color: #98c1d9;
+    color: #3d5a80;
+    border-radius: 30px;
+  }
 `;
 
 export default Adminhome;

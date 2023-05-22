@@ -11,6 +11,12 @@ import axios from "axios";
 
 const Register = () => {
   const [drole, setDrole] = useState("PLAYER");
+  const [formdata, setFormdata] = useState({
+    email: "",
+    password: "",
+    conpass: "",
+    username: "",
+  });
 
   const trytoregister = () => {
     if (formdata.password != formdata.conpass) {
@@ -51,16 +57,17 @@ const Register = () => {
 
     let user = {
       name: formdata.username,
-      email: formdata.email,
+      username: formdata.email,
       password: formdata.password,
-      roles:drole
+      roles: "user",
+      wallet : 0
     };
 
     //console.log(user);
-    axios.post(process.env.REACT_APP_BACKEND_URL + "/user/add", user).then(
+    axios.post(process.env.REACT_APP_BACKEND_URL + "/users/add", user).then(
       (response) => {
-        //console.log(response.data);
-        if (response.data == 1) {
+        console.log(response.data);
+        if (response.data == 200) {
           toast.success("Success ! try login", {
             position: "top-right",
             autoClose: 2000,
@@ -78,12 +85,7 @@ const Register = () => {
     //console.log(user);
   };
 
-  const [formdata, setFormdata] = useState({
-    email: "",
-    password: "",
-    conpass: "",
-    username: "",
-  });
+
   const update = (event) => {
     let val = event.target.value;
     let name = event.target.name;
@@ -128,14 +130,8 @@ const Register = () => {
       <div>
         <div class="container-fluid">
           <div class="row login_page_outside">
-            {/*<div className="col-xl-1 col-lg-2 col-md-3 col-sm-0 left_block">
-                            <Sidebar/>
-    </div>*/}
             <div class="col-xl-12 col-lg-10 px-lg-5 px-0 col-sm-12 main_login_window py-5">
               <div class="login_inside p-5">
-                {/*<div class="welcome_back h3 text-center">
-                                    welcome back <br/><br/> <i class="fa-solid fa-face-smile-beam fa-2x"></i>
-    </div>*/}
                 <div class="login_to_your_acc h1 text-center">
                   Register Here
                   <h6>you are registering as a {drole}</h6>
@@ -235,7 +231,7 @@ const Register = () => {
                   REGISTER {/*<i class="fa-solid fa-fingerprint"></i>*/}
                 </div>
 
-                {drole === "PLAYER" && (
+                {/* {drole === "PLAYER" && (
                   <div class="p-small register_here text-center cursor_pointer_1" onClick={()=>setDrole("COACH")}>
                     <h6>register as a coach</h6>
                   </div>
@@ -243,7 +239,7 @@ const Register = () => {
                   <div class="p-small register_here text-center cursor_pointer_1" onClick={()=>setDrole("PLAYER")}>
                     <h6>register as a palyer</h6>
                   </div>
-                )}
+                )} */}
 
                 <div class="p-small register_here text-center">
                   <a

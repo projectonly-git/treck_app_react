@@ -1,30 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../Components/Navbar/Navbar";
-import Userview from "../Components/Userview/Userview";
 import Adminhome from "./Adminhome";
 import Coachhome from './Coachhome'
 import Homewithoutlogin from './Homewithoutlogin'
+
+
+
+import Userview from './Userupcomingevents'
 
 const Returnthemainview = ({ user , updateUser}) => {
   if (localStorage.getItem("isloggedin") === null) {
     return (
       <>
-        <h1><Homewithoutlogin/></h1>
+        <Homewithoutlogin />
       </>
     );
   } else if (localStorage.getItem("isloggedin") === "yes") {
-    if (localStorage.getItem("userrole") === "PLAYER") {
+    if (localStorage.getItem("userrole") === "user") {
       return (
         <>
-          <Userview user={user} updateUser={updateUser} />
+          <Userview />
         </>
       );
     }
-    if (localStorage.getItem("userrole") === "ADMIN") {
+    if (localStorage.getItem("userrole") === "admin") {
       return (
         <>
-          <Adminhome user={user} />
+          <Adminhome/>
         </>
       );
     }

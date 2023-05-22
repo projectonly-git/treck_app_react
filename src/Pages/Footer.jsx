@@ -8,8 +8,8 @@ import "../Assets/Common.css";
 function Footer(props) {
   return (
     <Footer1 className='p-3'>
-      <h1 className="text-white">Soccer Pro</h1>
-      <p className="text-white">Your home to every thing football</p>
+      <h1 className="text-white">TrekIt</h1>
+      <p className="text-white">Your One stop destination to trecking</p>
     </Footer1>
   );
 }

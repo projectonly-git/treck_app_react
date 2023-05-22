@@ -7,18 +7,13 @@ const Loginprofile = ({ user }) => {
   const navigate = useNavigate();
 
   const signout = () => {
-    localStorage.removeItem("pid");
-    localStorage.removeItem("isregisteredforclub");
-    localStorage.removeItem("clubid");
     localStorage.removeItem("isloggedin");
-    localStorage.removeItem("email");
+    localStorage.removeItem("emailid");
     localStorage.removeItem("userrole");
-    localStorage.removeItem("trainingbooking");
-    localStorage.removeItem("coachbooking");
     navigate("/");
   };
 
-  if (localStorage.getItem("isloggedin") === null ) {
+  if (localStorage.getItem("isloggedin") === null) {
     return (
       <>
         <div class=" py-1 px-3 h6 login_border cursor_pointer ">
@@ -36,22 +31,37 @@ const Loginprofile = ({ user }) => {
   } else {
     return (
       <>
+        <div class=" py-1 px-3 p-small cursor_pointer ">
+          <a href="/#learn" class="text-white">
+            activities{" "}
+          </a>
+        </div>
+        <div class=" py-1 px-3 p-small cursor_pointer ">
+          <a href="/#seasonaltrecks" class="text-white">
+            seasonal trecks
+          </a>
+        </div>
         <div class=" py-1 px-3 h6 login_border cursor_pointer ">
-          <a href="/upcomingevents" class="text-white ">
-            My events
+          <a href="/profile" class="text-white ">
+            My bookings
           </a>
         </div>
         <div
           class=" py-1 px-3 p-small  cursor_pointer text-white h6"
           onClick={signout}
         >
-          logout <i class="fa fa-sign-out px-2" aria-hidden="true" onClick={() => signout()}></i>
+          logout{" "}
+          <i
+            class="fa fa-sign-out px-2"
+            aria-hidden="true"
+            onClick={() => signout()}
+          ></i>
         </div>
       </>
     );
   }
 };
-function Navbar({user}) {
+function Navbar({ user }) {
   return (
     <NavbarouterSection>
       <div id="navbar" class=" outerNavbar ">
@@ -60,22 +70,30 @@ function Navbar({user}) {
             <div class=" row py-2 ">
               <div class=" col-lg-4 ">
                 <a class=" text-white" href="/">
-                  <h3 class="cursor_pointer"> Soccer Pro </h3>
+                  <h3 class="cursor_pointer"> TrekIt </h3>
                 </a>
               </div>
 
               <div class=" col-lg-8 text-white">
                 <div class=" d-flex flex-row navbar_option ">
                   <a href="/about" class="text-white">
-                    <div class=" py-1 px-3 p-small cursor_pointer">About</div>
+                    <div class=" py-1 px-3 p-small cursor_pointer">
+                      treckings
+                    </div>
                   </a>
-                  <div class=" py-1 px-3 p-small cursor_pointer ">
+                  {/* <div class=" py-1 px-3 p-small cursor_pointer ">
                     <a href="/#learn" class="text-white">
-                      Learn{" "}
+                      activities{" "}
                     </a>
-                  </div>
+                  </div> */}
 
-                  <Loginprofile user={ user } />
+                  {/* </div><div class=" py-1 px-3 p-small cursor_pointer ">
+                    <a href="/#learn" class="text-white">
+                      activities{" "}
+                    </a>
+                  </div> */}
+
+                  <Loginprofile user={user} />
                 </div>
               </div>
             </div>
